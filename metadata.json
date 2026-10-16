@@ -1,0 +1,6 @@
+{
+  "name": "SP Utilities Consumption & Eco Tracker",
+  "description": "Mobile utilities consumption and billing dashboard with electricity and water charts, energy insights, GreenUP rewards, and EV charging.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
