@@ -4,44 +4,79 @@
  */
 
 import React, { useState } from 'react';
-import { Home, FileText, Smartphone, Wifi, Battery, BatteryMedium, Sparkles } from 'lucide-react';
+import { Home, FileText, Smartphone, Wifi, BatteryMedium, Sparkles, Target, Award, Zap, User } from 'lucide-react';
 import { HomeTab } from './components/HomeTab';
+import { TargetsTab } from './components/TargetsTab';
 import { BillsTab } from './components/BillsTab';
 import { GreenUpTab } from './components/GreenUpTab';
 import { EvChargingTab } from './components/EvChargingTab';
 import { ProfileTab } from './components/ProfileTab';
 
+type AppTab = 'Home' | 'Targets' | 'Bills' | 'GreenUP' | 'EV Charging' | 'Profile';
+
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'Home' | 'Bills' | 'GreenUP' | 'EV Charging' | 'Profile'>('Home');
+  const [activeTab, setActiveTab] = useState<AppTab>('Targets');
   const [isPhoneFrame, setIsPhoneFrame] = useState<boolean>(true);
 
   return (
-    <div className="bg-[#f0f2f5] min-h-screen flex flex-col items-center justify-start py-0 md:py-6 antialiased font-sans text-slate-800">
-      {/* Desktop view controls */}
-      <div className="hidden md:flex items-center gap-3 mb-3 bg-white px-3 py-1.5 rounded-full shadow-2xs border border-slate-200 text-xs">
-        <span className="text-slate-500 font-medium">Preview Mode:</span>
-        <button
-          onClick={() => setIsPhoneFrame(true)}
-          className={`px-3 py-1 rounded-full font-semibold transition-all ${
-            isPhoneFrame ? 'bg-[#00afaa] text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          📱 Mobile Device (412px)
-        </button>
-        <button
-          onClick={() => setIsPhoneFrame(false)}
-          className={`px-3 py-1 rounded-full font-semibold transition-all ${
-            !isPhoneFrame ? 'bg-[#00afaa] text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          🖥️ Expanded Responsive
-        </button>
+    <div className="bg-[#f0f2f5] min-h-screen flex flex-col items-center justify-start py-0 md:py-5 antialiased font-sans text-slate-800">
+      {/* Desktop Controls Bar: Screen Switcher + Frame Selector */}
+      <div className="hidden md:flex flex-wrap items-center justify-center gap-3 mb-3 bg-white px-4 py-2 rounded-2xl shadow-2xs border border-slate-200 text-xs">
+        {/* Version Switcher */}
+        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+          <span className="text-[11px] font-bold text-slate-500 px-2">Screen Version:</span>
+          <button
+            onClick={() => setActiveTab('Home')}
+            className={`px-3 py-1 rounded-lg font-bold transition-all text-xs flex items-center gap-1 ${
+              activeTab === 'Home'
+                ? 'bg-white text-slate-800 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <span>v1: Standard Dashboard (Old)</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('Targets')}
+            className={`px-3 py-1 rounded-lg font-bold transition-all text-xs flex items-center gap-1 ${
+              activeTab === 'Targets'
+                ? 'bg-[#00afaa] text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-yellow-300"></span>
+            <span>v2: Monthly Target & In-Progress (New)</span>
+          </button>
+        </div>
+
+        <div className="h-4 w-[1px] bg-slate-200"></div>
+
+        {/* Viewport Frame */}
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setIsPhoneFrame(true)}
+            className={`px-3 py-1 rounded-lg font-semibold transition-all ${
+              isPhoneFrame ? 'bg-slate-800 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            📱 Mobile Frame (412px)
+          </button>
+          <button
+            onClick={() => setIsPhoneFrame(false)}
+            className={`px-3 py-1 rounded-lg font-semibold transition-all ${
+              !isPhoneFrame ? 'bg-slate-800 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            🖥️ Responsive
+          </button>
+        </div>
       </div>
 
       {/* Main App Container */}
       <div
         className={`w-full bg-[#f8fafc] flex flex-col min-h-screen relative shadow-2xl overflow-x-hidden pb-20 ${
-          isPhoneFrame ? 'max-w-[412px] md:rounded-[36px] md:border-[7px] md:border-slate-800 md:min-h-[860px]' : 'max-w-2xl md:rounded-2xl border border-slate-200'
+          isPhoneFrame
+            ? 'max-w-[412px] md:rounded-[36px] md:border-[7px] md:border-slate-800 md:min-h-[860px]'
+            : 'max-w-2xl md:rounded-2xl border border-slate-200'
         }`}
       >
         {/* Mobile Device Status Bar */}
@@ -58,9 +93,37 @@ export default function App() {
           </div>
         </div>
 
+        {/* In-App Quick Screen Switcher Banner (Mobile Accessible) */}
+        <div className="px-3 pt-1 pb-1">
+          <div className="bg-slate-100/90 p-1 rounded-xl flex items-center gap-1 text-[11px]">
+            <button
+              onClick={() => setActiveTab('Home')}
+              className={`flex-1 py-1 px-2 rounded-lg font-bold text-center transition-all ${
+                activeTab === 'Home'
+                  ? 'bg-white text-slate-800 shadow-2xs'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              Old View (v1)
+            </button>
+            <button
+              onClick={() => setActiveTab('Targets')}
+              className={`flex-1 py-1 px-2 rounded-lg font-bold text-center transition-all flex items-center justify-center gap-1 ${
+                activeTab === 'Targets'
+                  ? 'bg-[#00afaa] text-white shadow-2xs'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>New Screen (v2)</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-yellow-300"></span>
+            </button>
+          </div>
+        </div>
+
         {/* Dynamic Screen Content */}
         <main className="flex-1 px-3 pt-1 space-y-2.5">
           {activeTab === 'Home' && <HomeTab onNavigateToTab={(tab: any) => setActiveTab(tab)} />}
+          {activeTab === 'Targets' && <TargetsTab onNavigateToTab={(tab: any) => setActiveTab(tab)} />}
           {activeTab === 'Bills' && <BillsTab />}
           {activeTab === 'GreenUP' && <GreenUpTab />}
           {activeTab === 'EV Charging' && <EvChargingTab />}
@@ -74,7 +137,7 @@ export default function App() {
           }`}
         >
           <div className="flex justify-between items-center text-center">
-            {/* 1. Home */}
+            {/* 1. Home (Old Screen) */}
             <button
               onClick={() => setActiveTab('Home')}
               className={`flex flex-col items-center flex-1 transition-all py-1 ${
@@ -84,12 +147,30 @@ export default function App() {
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
                 <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
               </svg>
-              <span className={`text-[10px] mt-1 ${activeTab === 'Home' ? 'font-bold' : 'font-medium'}`}>
-                Home
+              <span className={`text-[10px] mt-0.5 ${activeTab === 'Home' ? 'font-bold' : 'font-medium'}`}>
+                Home (v1)
               </span>
             </button>
 
-            {/* 2. Bills */}
+            {/* 2. Targets (New Screen) */}
+            <button
+              onClick={() => setActiveTab('Targets')}
+              className={`flex flex-col items-center flex-1 transition-all py-1 relative ${
+                activeTab === 'Targets' ? 'text-[#00afaa]' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              <div className="relative">
+                <Target className="w-5 h-5 stroke-[2.2]" />
+                <span className="absolute -top-1 -right-2 bg-rose-500 text-white text-[7px] font-black px-1 rounded-full animate-pulse">
+                  NEW
+                </span>
+              </div>
+              <span className={`text-[10px] mt-0.5 ${activeTab === 'Targets' ? 'font-bold' : 'font-medium'}`}>
+                Targets (v2)
+              </span>
+            </button>
+
+            {/* 3. Bills */}
             <button
               onClick={() => setActiveTab('Bills')}
               className={`flex flex-col items-center flex-1 transition-all py-1 ${
@@ -103,12 +184,12 @@ export default function App() {
                   strokeLinejoin="round"
                 ></path>
               </svg>
-              <span className={`text-[10px] mt-1 ${activeTab === 'Bills' ? 'font-bold' : 'font-medium'}`}>
+              <span className={`text-[10px] mt-0.5 ${activeTab === 'Bills' ? 'font-bold' : 'font-medium'}`}>
                 Bills
               </span>
             </button>
 
-            {/* 3. GreenUP */}
+            {/* 4. GreenUP */}
             <button
               onClick={() => setActiveTab('GreenUP')}
               className={`flex flex-col items-center flex-1 transition-all py-1 ${
@@ -122,12 +203,12 @@ export default function App() {
               >
                 <span className="transform -translate-y-[0.5px]">⇧</span>
               </div>
-              <span className={`text-[10px] mt-1 ${activeTab === 'GreenUP' ? 'font-bold' : 'font-medium'}`}>
+              <span className={`text-[10px] mt-0.5 ${activeTab === 'GreenUP' ? 'font-bold' : 'font-medium'}`}>
                 GreenUP
               </span>
             </button>
 
-            {/* 4. EV Charging */}
+            {/* 5. EV Charging */}
             <button
               onClick={() => setActiveTab('EV Charging')}
               className={`flex flex-col items-center flex-1 transition-all py-1 ${
@@ -140,12 +221,12 @@ export default function App() {
                 <circle cx="7.5" cy="14" fill="currentColor" r="1.5"></circle>
                 <circle cx="16.5" cy="14" fill="currentColor" r="1.5"></circle>
               </svg>
-              <span className={`text-[10px] mt-1 ${activeTab === 'EV Charging' ? 'font-bold' : 'font-medium'}`}>
+              <span className={`text-[10px] mt-0.5 ${activeTab === 'EV Charging' ? 'font-bold' : 'font-medium'}`}>
                 EV Charging
               </span>
             </button>
 
-            {/* 5. Profile */}
+            {/* 6. Profile */}
             <button
               onClick={() => setActiveTab('Profile')}
               className={`flex flex-col items-center flex-1 transition-all py-1 ${
@@ -156,7 +237,7 @@ export default function App() {
                 <path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" strokeLinecap="round" strokeLinejoin="round"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
-              <span className={`text-[10px] mt-1 ${activeTab === 'Profile' ? 'font-bold' : 'font-medium'}`}>
+              <span className={`text-[10px] mt-0.5 ${activeTab === 'Profile' ? 'font-bold' : 'font-medium'}`}>
                 Profile
               </span>
             </button>

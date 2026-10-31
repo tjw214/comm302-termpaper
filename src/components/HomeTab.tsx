@@ -136,13 +136,9 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateToTab }) => {
               onClick={() => setShowAddressDropdown(!showAddressDropdown)}
               className="flex items-center gap-1.5 text-left group py-1"
             >
-              {isAddressBlurred ? (
-                <div className="w-32 h-3.5 bg-slate-200/90 rounded filter blur-[1.5px] transition-all group-hover:bg-slate-300"></div>
-              ) : (
-                <span className="text-xs font-semibold text-slate-800 max-w-[170px] truncate">
-                  {activePremise.address}
-                </span>
-              )}
+              <span className="font-bold text-slate-800 text-[12.5px]">
+                {activePremise.address.includes('128 Toa Payoh') ? '128 Toa Payoh' : activePremise.address}
+              </span>
               <svg
                 className={`w-3.5 h-3.5 text-slate-500 group-hover:text-slate-800 transition-transform ${
                   showAddressDropdown ? 'rotate-180' : ''
@@ -153,18 +149,6 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateToTab }) => {
               >
                 <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"></path>
               </svg>
-            </button>
-
-            {/* Privacy toggle icon next to address */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsAddressBlurred(!isAddressBlurred);
-              }}
-              title={isAddressBlurred ? 'Reveal address' : 'Hide address'}
-              className="ml-1 inline-flex text-slate-400 hover:text-slate-600 transition-colors align-middle"
-            >
-              {isAddressBlurred ? <Eye className="w-3 h-3 inline" /> : <EyeOff className="w-3 h-3 inline" />}
             </button>
 
             {/* Address Switcher Dropdown Menu */}
@@ -304,18 +288,22 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateToTab }) => {
                 preserveAspectRatio="none"
                 viewBox="0 0 300 140"
               >
-                {/* Neighbour Avg: Dotted Line */}
+                {/* Neighbour Avg: Dotted Straight Segments */}
                 <path
-                  d={getCurvePath('neighbourAvg')}
+                  d={utilityType === 'electricity' 
+                    ? "M 12,85 L 37,84 L 62,80 L 88,75 L 113,70 L 138,72 L 148,84 L 163,83 L 188,71 L 200,68 L 225,69 L 238,81 L 243,78"
+                    : getCurvePath('neighbourAvg')}
                   fill="none"
                   stroke="#4b5563"
                   strokeDasharray="2,2"
                   strokeWidth="1.3"
                 ></path>
 
-                {/* Efficiency Avg: Solid Line */}
+                {/* Efficiency Avg: Solid Straight Segments */}
                 <path
-                  d={getCurvePath('efficiencyAvg')}
+                  d={utilityType === 'electricity'
+                    ? "M 12,108 L 37,108 L 62,107 L 88,106 L 113,103 L 138,100 L 148,108 L 163,106 L 188,98 L 200,98 L 225,103 L 238,106 L 243,104"
+                    : getCurvePath('efficiencyAvg')}
                   fill="none"
                   stroke="#4b5563"
                   strokeWidth="1.3"

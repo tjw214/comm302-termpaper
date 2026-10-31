@@ -1,0 +1,637 @@
+<!-- Energy Consumption Dashboard -->
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Utility Consumption App</title>
+<!-- Tailwind CSS CDN with forms and container-queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              teal: '#00afaa',
+              mint: '#a6ece4',
+              softTeal: '#dcfaf5',
+              darkTeal: '#00837d',
+              orangeBg: '#fff7ed',
+              orangeBorder: '#fbcfe8',
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="base-styling">
+    body {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    /* Hide scrollbars for carousel */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#f2f4f7] flex justify-center min-h-screen text-slate-800 font-sans antialiased">
+<!-- Mobile Screen Container -->
+<div class="w-full max-w-[412px] bg-[#f8fafc] flex flex-col min-h-screen relative shadow-2xl overflow-x-hidden pb-20">
+<!-- BEGIN: TopNotificationBanner -->
+<header class="px-3 pt-3">
+<!-- Maintenance Alert Box -->
+<div class="flex items-center gap-2 bg-[#fff8eb] border border-[#fbd38d] rounded-md px-3 py-2 text-[#d97706] text-[11.5px] font-medium leading-tight shadow-sm">
+<svg class="w-4 h-4 shrink-0 text-[#d97706]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+<line stroke-width="2" x1="12" x2="12" y1="8" y2="12"></line>
+<line stroke-linecap="round" stroke-width="2.5" x1="12" x2="12.01" y1="16" y2="16"></line>
+</svg>
+<span class="truncate">19 Oct - Scheduled Maintenance. Read more he...</span>
+</div>
+</header>
+<!-- END: TopNotificationBanner -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 px-3 pt-2.5 space-y-2.5">
+<!-- BEGIN: PromoBanner -->
+<!-- Gradient Turquoise U-Save Banner -->
+<section class="relative bg-gradient-to-r from-[#20c4b2] via-[#00b5a8] to-[#009b96] rounded-xl p-3 text-white overflow-hidden shadow-sm">
+<!-- Close button -->
+<button aria-label="Dismiss banner" class="absolute top-2.5 right-2.5 text-white/80 hover:text-white">
+<svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+<div class="flex items-center gap-3 pr-4">
+<!-- GST Voucher Circle Badge -->
+<div class="relative w-12 h-12 rounded-full bg-[#fde047] flex items-center justify-center shrink-0 shadow-inner">
+<div class="w-8 h-5 bg-[#8b181b] rounded-[2px] flex flex-col items-center justify-center shadow-sm">
+<span class="text-[5.5px] font-bold tracking-tight text-[#fde047] leading-none">GST</span>
+<span class="text-[5px] font-bold tracking-tighter text-[#fff] leading-none mt-0.5">VOUCHER</span>
+</div>
+</div>
+<!-- Banner Text -->
+<div class="text-[12.5px] font-semibold leading-snug">
+            Receive double the regular U-Save in total from Apr 26 to Jan 27
+          </div>
+</div>
+</section>
+<!-- END: PromoBanner -->
+<!-- BEGIN: ChartContainerCard -->
+<section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col">
+<!-- Address & Utility Selector Row -->
+<div class="flex items-center justify-between pb-2">
+<!-- Address Dropdown -->
+<button class="flex items-center gap-1.5 text-left group">
+<span class="font-bold text-slate-800 text-[12.5px]">128 Toa Payoh</span>
+<svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<!-- Toggle Tabs: Electricity & Water -->
+<div class="flex items-center gap-2">
+<!-- Electricity Tab (Active) -->
+<button aria-label="Electricity consumption" class="w-8 h-8 rounded-full bg-[#d7f7f3] text-[#00a89d] flex items-center justify-center transition-transform active:scale-95 shadow-sm">
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+<path d="M13 2L4.5 13.5H11L9.5 22L19.5 10.5H13L15 2H13Z"></path>
+</svg>
+</button>
+<!-- Water Tab (Inactive) -->
+<button aria-label="Water consumption" class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 border border-slate-200 flex items-center justify-center hover:bg-slate-100 transition-transform active:scale-95">
+<svg class="w-4 h-4 stroke-current fill-none stroke-[2]" viewBox="0 0 24 24">
+<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Unit Label & Info Icon -->
+<div class="flex items-center justify-between text-slate-600 text-xs mt-1 mb-2 font-medium">
+<span class="">kWh</span>
+<button class="text-slate-400 hover:text-slate-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9" stroke-width="1.8"></circle>
+<line stroke-width="1.8" x1="12" x2="12" y1="10" y2="16"></line>
+<circle cx="12" cy="7" fill="currentColor" r="0.75"></circle>
+</svg>
+</button>
+</div>
+<!-- BEGIN: ConsumptionChart -->
+<div class="relative w-full h-44 mt-1">
+<!-- Horizontal Grid Lines and Y-Axis Labels -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none text-[9.5px] text-slate-400 font-medium">
+<div class="flex items-center gap-1.5 w-full">
+<span class="w-7 text-right">2,440</span>
+<div class="flex-1 h-[1px] bg-slate-200"></div>
+</div>
+<div class="flex items-center gap-1.5 w-full">
+<span class="w-7 text-right">1,220</span>
+<div class="flex-1 h-[1px] bg-slate-200"></div>
+</div>
+<div class="flex items-center gap-1.5 w-full">
+<span class="w-7 text-right">0</span>
+<div class="flex-1 h-[1px] bg-slate-300"></div>
+</div>
+</div>
+<!-- Chart Area: Bars and SVG Trend Lines -->
+<div class="absolute left-9 right-0 top-2 bottom-3 flex items-end">
+<!-- 12 Months Columns -->
+<div class="w-full h-full flex justify-between items-end px-1 relative">
+<!-- Month 1: J* -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 48%;"></div>
+</div>
+<!-- Month 2: F -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 44%;"></div>
+</div>
+<!-- Month 3: M* -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 44%;"></div>
+</div>
+<!-- Month 4: A -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 49%;"></div>
+</div>
+<!-- Month 5: M* -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 44%;"></div>
+</div>
+<!-- Month 6: J -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 58%;"></div>
+</div>
+<!-- Month 7: J* -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 52%;"></div>
+</div>
+<!-- Month 8: A -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 48%;"></div>
+</div>
+<!-- Month 9: S* -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 50%;"></div>
+</div>
+<!-- Month 10: O (No bar) -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-transparent h-0"></div>
+</div>
+<!-- Month 11: N (No bar) -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-transparent h-0"></div>
+</div>
+<!-- Month 12: D (No bar) -->
+<div class="flex flex-col items-center h-full justify-end w-4 z-0">
+<div class="w-3.5 bg-transparent h-0"></div>
+</div>
+<!-- SVG Overlay for Trend Lines -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-10" preserveAspectRatio="none" viewBox="0 0 300 140"><!-- Neighbour Avg: Dotted Straight Segments -->
+<path d="M 12,85 L 37,84 L 62,80 L 88,75 L 113,70 L 138,72 L 148,84 L 163,83 L 188,71 L 200,68 L 225,69 L 238,81 L 243,78" fill="none" stroke="#4b5563" stroke-dasharray="2,2" stroke-width="1.3"></path>
+<!-- Efficiency Avg: Solid Straight Segments -->
+<path d="M 12,108 L 37,108 L 62,107 L 88,106 L 113,103 L 138,100 L 148,108 L 163,106 L 188,98 L 200,98 L 225,103 L 238,106 L 243,104" fill="none" stroke="#4b5563" stroke-width="1.3"></path></svg>
+</div>
+</div>
+</div>
+<!-- Month Labels Row -->
+<div class="flex justify-between pl-9 pr-1 text-[9.5px] font-medium text-slate-500 mt-1">
+<span class="w-4 text-center">J*</span>
+<span class="w-4 text-center">F</span>
+<span class="w-4 text-center">M*</span>
+<span class="w-4 text-center">A</span>
+<span class="w-4 text-center">M*</span>
+<span class="w-4 text-center">J</span>
+<span class="w-4 text-center">J*</span>
+<span class="w-4 text-center">A</span>
+<span class="w-4 text-center">S*</span>
+<span class="w-4 text-center">O</span>
+<span class="w-4 text-center">N</span>
+<span class="w-4 text-center">D</span>
+</div>
+<!-- END: ConsumptionChart -->
+<!-- Legend -->
+<div class="flex items-center justify-center gap-3 mt-4 text-[10px] text-slate-600 font-medium">
+<!-- Consumption Dot -->
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-[#a2ece2]"></span>
+<span class="">Consumption</span>
+</div>
+<!-- Neighbour Line -->
+<div class="flex items-center gap-1.5">
+<span class="w-3 border-t-2 border-dashed border-slate-700"></span>
+<span class="">Neighbour Avg.</span>
+</div>
+<!-- Efficiency Line -->
+<div class="flex items-center gap-1.5">
+<span class="w-3 border-t-2 border-solid border-slate-700"></span>
+<span class="">Efficiency Avg.</span>
+</div>
+</div>
+<!-- Billing Month Label & Year Filter Controls -->
+<div class="mt-4 flex flex-col items-center">
+<span class="text-[11px] text-slate-500 font-medium mb-1.5">Billing Month</span>
+<div class="flex items-center border border-slate-200 rounded-full bg-white shadow-sm overflow-hidden text-xs">
+<!-- Prev Button -->
+<button aria-label="Previous Period" class="px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors border-r border-slate-200">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<!-- Dropdown selector -->
+<button class="flex items-center gap-1 px-5 py-1.5 font-bold text-slate-700 text-[11px] tracking-wide">
+<span class="">THIS YEAR</span>
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<!-- Next Button (Disabled) -->
+<button aria-label="Next Period" class="px-4 py-1.5 text-slate-300 cursor-not-allowed border-l border-slate-200" disabled="">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+</div>
+</div>
+</section>
+<!-- END: ChartContainerCard -->
+<!-- BEGIN: InsightsCalloutCard -->
+<section class="relative bg-gradient-to-r from-[#00b5a8] to-[#009289] rounded-xl p-3 text-white flex items-center justify-between shadow-sm overflow-visible mt-4">
+<!-- Mascot Illustration -->
+<div class="absolute -top-4 left-2 shrink-0">
+<div class="relative w-10 h-11 flex flex-col items-center">
+<!-- Cute Cartoon Lightning Face -->
+<div class="w-7 h-8 bg-[#fcd34d] border-2 border-[#b45309] rounded-md relative flex flex-col items-center pt-1 shadow-sm">
+<!-- Eyeballs -->
+<div class="flex gap-1">
+<span class="w-1 h-1.5 bg-[#451a03] rounded-full"></span>
+<span class="w-1 h-1.5 bg-[#451a03] rounded-full"></span>
+</div>
+<!-- Mouth -->
+<div class="w-2.5 h-1.5 bg-[#b91c1c] rounded-b-full mt-1"></div>
+</div>
+<!-- Lightning tail extension -->
+<div class="w-0 h-0 border-x-[5px] border-x-transparent border-t-[9px] border-t-[#fcd34d] -mt-0.5 filter drop-shadow-[0_1px_0_#b45309]"></div>
+</div>
+</div>
+<!-- Banner Text Content -->
+<div class="pl-12 pr-2">
+<p class="text-[12px] font-semibold leading-snug">
+            Learn more about energy insights to start optimising!
+          </p>
+</div>
+<!-- Action Arrow -->
+<button aria-label="Go to insights" class="shrink-0 p-1 text-white hover:translate-x-0.5 transition-transform">
+<svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<line x1="5" x2="19" y1="12" y2="12"></line>
+<polyline points="12 5 19 12 12 19"></polyline>
+</svg>
+</button>
+</section>
+<!-- END: InsightsCalloutCard -->
+<!-- BEGIN: PromoCarouselTeaser -->
+<section class="pt-1 overflow-hidden">
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+<!-- Card 1 -->
+<div class="min-w-[270px] bg-white rounded-xl border border-slate-100 shadow-sm flex items-center p-2.5 gap-2.5">
+<div class="w-20 h-12 bg-gradient-to-tr from-blue-700 via-indigo-600 to-sky-400 rounded-md flex items-center justify-center p-1 relative shadow-inner">
+<div class="w-12 h-7 border border-white/40 rounded bg-white/20 backdrop-blur-xs flex items-end p-1">
+<span class="text-[5px] text-white font-mono">•••• 8821</span>
+</div>
+</div>
+<div>
+<div class="text-[11px] font-bold text-slate-800">Up to 4.33%</div>
+<div class="text-[9px] text-slate-500">cashback on utility bills</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[270px] bg-white rounded-xl border border-slate-100 shadow-sm flex items-center p-2.5 gap-2.5">
+<div class="w-20 h-12 bg-gradient-to-r from-sky-500 to-blue-600 rounded-md flex items-center justify-center relative overflow-hidden">
+<svg class="w-7 h-7 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9" stroke-width="1.5"></circle>
+<path d="M12 3v18M3 12h18"></path>
+</svg>
+</div>
+<div>
+<div class="text-[11px] font-bold text-slate-800">Green Rewards</div>
+<div class="text-[9px] text-slate-500">Redeem lifestyle deals</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: PromoCarouselTeaser -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: BottomNavigation -->
+<nav class="fixed bottom-0 w-full max-w-[412px] bg-white border-t border-slate-200 py-2 px-3 z-50 shadow-lg">
+<div class="flex justify-between items-center text-center">
+<!-- 1. Home (Active) -->
+<button class="flex flex-col items-center flex-1 text-[#00afaa]">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+</svg>
+<span class="text-[10px] font-semibold mt-1">Home</span>
+</button>
+<!-- 2. Bills -->
+<button class="flex flex-col items-center flex-1 text-slate-400 hover:text-slate-600">
+<svg class="w-5 h-5 stroke-current fill-none stroke-[2]" viewBox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[10px] font-medium mt-1">Bills</span>
+</button>
+<!-- 3. GreenUP -->
+<button class="flex flex-col items-center flex-1 text-slate-400 hover:text-slate-600">
+<div class="w-5 h-5 border-2 border-current rounded flex items-center justify-center font-bold text-[8.5px] leading-none">
+<span class="transform -translate-y-[0.5px]">⇧</span>
+</div>
+<span class="text-[10px] font-medium mt-1">GreenUP</span>
+</button>
+<!-- 4. EV Charging -->
+<button class="flex flex-col items-center flex-1 text-slate-400 hover:text-slate-600">
+<svg class="w-5 h-5 stroke-current fill-none stroke-[2]" viewBox="0 0 24 24">
+<rect height="8" rx="2" stroke-linecap="round" stroke-linejoin="round" width="18" x="3" y="10"></rect>
+<path d="M5 10l1.5-4.5h11L19 10" stroke-linecap="round" stroke-linejoin="round"></path>
+<circle cx="7.5" cy="14" fill="currentColor" r="1.5"></circle>
+<circle cx="16.5" cy="14" fill="currentColor" r="1.5"></circle>
+</svg>
+<span class="text-[10px] font-medium mt-1">EV Charging</span>
+</button>
+<!-- 5. Profile -->
+<button class="flex flex-col items-center flex-1 text-slate-400 hover:text-slate-600">
+<svg class="w-5 h-5 stroke-current fill-none stroke-[2]" viewBox="0 0 24 24">
+<path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke-linecap="round" stroke-linejoin="round"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+<span class="text-[10px] font-medium mt-1">Profile</span>
+</button>
+</div>
+</nav>
+<!-- END: BottomNavigation -->
+</div>
+
+
+
+
+</body></html>
+
+<!-- Energy Dashboard - Monthly Targets & In-Progress View -->
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Utility Consumption App</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN with forms and container-queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              teal: '#00afaa',
+              mint: '#a6ece4',
+              softTeal: '#dcfaf5',
+              darkTeal: '#00837d',
+              orangeBg: '#fff7ed',
+              orangeBorder: '#fbcfe8',
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="base-styling">
+    body {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    /* Hide scrollbars for carousel */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#f2f4f7] flex justify-center min-h-screen text-slate-800 font-sans antialiased">
+<!-- Mobile Screen Container -->
+<div class="w-full max-w-[412px] bg-[#f8fafc] flex flex-col min-h-screen relative shadow-2xl overflow-x-hidden pb-20">
+<!-- BEGIN: TopNotificationBanner -->
+<header class="px-3 pt-3">
+<!-- Maintenance Alert Box -->
+<div class="flex items-center gap-2 bg-[#fff8eb] border border-[#fbd38d] rounded-md px-3 py-2 text-[#d97706] text-[11.5px] font-medium leading-tight shadow-sm">
+<svg class="w-4 h-4 shrink-0 text-[#d97706]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+<line stroke-width="2" x1="12" x2="12" y1="8" y2="12"></line>
+<line stroke-linecap="round" stroke-width="2.5" x1="12" x2="12.01" y1="16" y2="16"></line>
+</svg>
+<span class="truncate">19 Oct - Scheduled Maintenance. Read more he...</span>
+</div>
+</header>
+<!-- END: TopNotificationBanner -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 px-3 pt-2.5 space-y-2.5">
+<!-- BEGIN: PromoBanner -->
+<!-- Gradient Turquoise U-Save Banner -->
+<section class="relative bg-gradient-to-r from-[#20c4b2] via-[#00b5a8] to-[#009b96] rounded-xl p-3 text-white overflow-hidden shadow-sm">
+<!-- Close button -->
+<button aria-label="Dismiss banner" class="absolute top-2.5 right-2.5 text-white/80 hover:text-white">
+<svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+<div class="flex items-center gap-3 pr-4">
+<!-- GST Voucher Circle Badge -->
+<div class="relative w-12 h-12 rounded-full bg-[#fde047] flex items-center justify-center shrink-0 shadow-inner">
+<div class="w-8 h-5 bg-[#8b181b] rounded-[2px] flex flex-col items-center justify-center shadow-sm">
+<span class="text-[5.5px] font-bold tracking-tight text-[#fde047] leading-none">GST</span>
+<span class="text-[5px] font-bold tracking-tighter text-[#fff] leading-none mt-0.5">VOUCHER</span>
+</div>
+</div>
+<!-- Banner Text -->
+<div class="text-[12.5px] font-semibold leading-snug">
+            Receive double the regular U-Save in total from Apr 26 to Jan 27
+          </div>
+</div>
+</section>
+<!-- END: PromoBanner -->
+<!-- BEGIN: ChartContainerCard -->
+<section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col">
+<!-- Address & Utility Selector Row -->
+<div class="flex items-center justify-between pb-2">
+<!-- Address Dropdown -->
+<button class="flex items-center gap-1.5 text-left group">
+<span class="font-bold text-slate-800 text-[12.5px]">128 Toa Payoh</span>
+<svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<!-- Toggle Tabs: Electricity & Water -->
+<div class="flex items-center gap-2">
+<!-- Electricity Tab (Active) -->
+<button aria-label="Electricity consumption" class="w-8 h-8 rounded-full bg-[#d7f7f3] text-[#00a89d] flex items-center justify-center transition-transform active:scale-95 shadow-sm">
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+<path d="M13 2L4.5 13.5H11L9.5 22L19.5 10.5H13L15 2H13Z"></path>
+</svg>
+</button>
+<!-- Water Tab (Inactive) -->
+<button aria-label="Water consumption" class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 border border-slate-200 flex items-center justify-center hover:bg-slate-100 transition-transform active:scale-95">
+<svg class="w-4 h-4 stroke-current fill-none stroke-[2]" viewBox="0 0 24 24">
+<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Unit Label & Info Icon -->
+<div class="flex items-center justify-between text-slate-600 text-xs mt-1 mb-2 font-medium"><span class="">kWh</span><div class="flex items-center gap-1.5"><span class="bg-[#00837d] text-white text-[9.5px] font-bold px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap">Target: 1,405 kWh</span><button class="text-slate-400 hover:text-slate-600 flex items-center"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="1.8"></circle><line stroke-width="1.8" x1="12" x2="12" y1="10" y2="16"></line><circle cx="12" cy="7" fill="currentColor" r="0.75"></circle></svg></button></div></div>
+<!-- BEGIN: ConsumptionChart -->
+<div class="relative w-full h-44 mt-1">
+<!-- Horizontal Grid Lines and Y-Axis Labels -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none text-[9.5px] text-slate-400 font-medium">
+<div class="flex items-center gap-1.5 w-full">
+<span class="w-7 text-right">2,440</span>
+<div class="flex-1 h-[1px] bg-slate-200"></div>
+</div>
+<div class="flex items-center gap-1.5 w-full">
+<span class="w-7 text-right">1,220</span>
+<div class="flex-1 h-[1px] bg-slate-200"></div>
+</div>
+<div class="flex items-center gap-1.5 w-full">
+<span class="w-7 text-right">0</span>
+<div class="flex-1 h-[1px] bg-slate-300"></div>
+</div>
+</div>
+<!-- Chart Area: Bars and SVG Trend Lines -->
+<div class="absolute left-9 right-0 top-2 bottom-3 flex items-end"><div class="w-full h-full flex justify-between items-end px-1 relative"><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 48%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 44%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 44%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 49%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 44%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 58%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 52%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 48%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-[#a2ece2] rounded-t-sm" style="height: 50%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-10 relative group"><div class="w-3.5 border-2 border-dashed border-[#00afaa] rounded-t-sm bg-[#00afaa]/10" style="height: 22%; border-bottom: 0px;"></div><div class="w-3.5 bg-[#00afaa] rounded-b-sm" style="height: 26%;"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-transparent h-0"></div></div><div class="flex flex-col items-center h-full justify-end w-4 z-0"><div class="w-3.5 bg-transparent h-0"></div></div><svg class="absolute inset-0 w-full h-full pointer-events-none z-10" preserveAspectRatio="none" viewBox="0 0 300 140"><line stroke="#00837d" stroke-dasharray="3,2" stroke-width="1.5" x1="229" x2="253" y1="73" y2="73" class=""></line><circle cx="241" cy="73" fill="#00837d" r="2.5" class=""></circle><path d="M 12,85 L 37,84 L 63,78 L 88,74 L 114,70 L 139,83 L 165,72 L 190,69 L 216,67" fill="none" stroke="#4b5563" stroke-dasharray="2,2" stroke-width="1.3" class=""></path><path d="M 12,108 L 37,108 L 63,107 L 88,105 L 114,102 L 139,107 L 165,103 L 190,102 L 216,100" fill="none" stroke="#4b5563" stroke-width="1.3" class=""></path></svg></div></div>
+</div>
+<!-- Month Labels Row -->
+<div class="flex justify-between pl-9 pr-1 text-[9.5px] font-medium text-slate-500 mt-1"><span class="w-4 text-center">J*</span><span class="w-4 text-center">F</span><span class="w-4 text-center">M*</span><span class="w-4 text-center">A</span><span class="w-4 text-center">M*</span><span class="w-4 text-center">J</span><span class="w-4 text-center">J*</span><span class="w-4 text-center">A</span><span class="w-4 text-center">S*</span><div class="flex flex-col items-center w-5 -mx-0.5"><span class="w-4 text-center font-bold text-[#00837d]">O</span></div><span class="w-4 text-center text-slate-400">N</span><span class="w-4 text-center text-slate-400">D</span></div>
+<!-- END: ConsumptionChart -->
+<!-- Legend -->
+<div class="flex items-center justify-center gap-3 mt-4 text-[10px] text-slate-600 font-medium"><div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5"><div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-[#00afaa]"></span><span class="">Used so far</span></div><div class="flex items-center gap-1"><span class="w-3 border-t-2 border-dashed border-[#00837d]"></span><span class="">Target</span></div><div class="flex items-center gap-1"><svg class="w-3.5 h-[2px]" viewBox="0 0 14 2" fill="none"><line x1="0" y1="1" x2="14" y2="1" stroke="#334155" stroke-width="2" stroke-dasharray="2 2" stroke-linecap="round"></line></svg><span class="">Neighbour Avg.</span></div><div class="flex items-center gap-1"><span class="w-3 border-t-2 border-solid border-slate-700"></span><span class="">Efficiency Avg.</span></div></div></div>
+<!-- Billing Month Label & Year Filter Controls -->
+<div class="mt-4 flex flex-col items-center">
+<span class="text-[11px] text-slate-500 font-medium mb-1.5">Billing Month</span>
+<div class="flex items-center border border-slate-200 rounded-full bg-white shadow-sm overflow-hidden text-xs">
+<!-- Prev Button -->
+<button aria-label="Previous Period" class="px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors border-r border-slate-200">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<!-- Dropdown selector -->
+<button class="flex items-center gap-1 px-5 py-1.5 font-bold text-slate-700 text-[11px] tracking-wide">
+<span class="">THIS YEAR</span>
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<!-- Next Button (Disabled) -->
+<button aria-label="Next Period" class="px-4 py-1.5 text-slate-300 cursor-not-allowed border-l border-slate-200" disabled="">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+</div>
+</div><div class="mt-4 pt-3 border-t border-slate-100"><div class="flex items-center justify-between bg-[#f8fafc] border border-slate-200 rounded-xl p-2.5"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-[#d7f7f3] text-[#00afaa] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[16px]">speed</span></div><div><div class="text-[11px] font-bold text-slate-800 tracking-tight">650 kWh used · <span class="text-[#00afaa]">755 kWh to go</span></div><div class="text-[9.5px] text-slate-500 font-medium">12 days left in billing cycle</div></div></div><div class="text-right shrink-0"></div></div><div class="mt-2 flex items-start gap-1.5 px-1"><span class="material-symbols-outlined text-amber-500 text-[14px] shrink-0 mt-0.5">info</span><p class="text-[10px] text-slate-600 leading-none flex items-center gap-1 text-left translate-y-[0.5px]"><strong class="text-slate-800 font-semibold">Keep under 63 kWh/day</strong><span class="">to stay within target.</span></p></div></div>
+</section>
+<!-- END: ChartContainerCard -->
+<!-- BEGIN: InsightsCalloutCard -->
+<div class="space-y-2.5 mt-4"><div class="flex items-center justify-between bg-white border border-slate-100 rounded-xl px-3.5 py-2.5 shadow-sm text-[11px] text-slate-600 font-medium"><span class="truncate"><strong class="text-slate-800 font-semibold">October target: 1,405 kWh</strong> · Set on 1 Oct (5% below September)</span></div></div>
+<!-- END: InsightsCalloutCard -->
+<!-- BEGIN: PromoCarouselTeaser -->
+<section class="pt-1 overflow-hidden">
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+<!-- Card 1 -->
+<div class="min-w-[270px] bg-white rounded-xl border border-slate-100 shadow-sm flex items-center p-2.5 gap-2.5">
+<div class="w-20 h-12 bg-gradient-to-tr from-blue-700 via-indigo-600 to-sky-400 rounded-md flex items-center justify-center p-1 relative shadow-inner">
+<div class="w-12 h-7 border border-white/40 rounded bg-white/20 backdrop-blur-xs flex items-end p-1">
+<span class="text-[5px] text-white font-mono">•••• 8821</span>
+</div>
+</div>
+<div>
+<div class="text-[11px] font-bold text-slate-800">Up to 4.33%</div>
+<div class="text-[9px] text-slate-500">cashback on utility bills</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[270px] bg-white rounded-xl border border-slate-100 shadow-sm flex items-center p-2.5 gap-2.5">
+<div class="w-20 h-12 bg-gradient-to-r from-sky-500 to-blue-600 rounded-md flex items-center justify-center relative overflow-hidden">
+<svg class="w-7 h-7 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9" stroke-width="1.5"></circle>
+<path d="M12 3v18M3 12h18"></path>
+</svg>
+</div>
+<div>
+<div class="text-[11px] font-bold text-slate-800">Green Rewards</div>
+<div class="text-[9px] text-slate-500">Redeem lifestyle deals</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: PromoCarouselTeaser -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: BottomNavigation -->
+<nav class="fixed bottom-0 w-full max-w-[412px] bg-white border-t border-slate-200 py-2 px-3 z-50 shadow-lg">
+<div class="flex justify-between items-center text-center">
+<!-- 1. Home (Active) -->
+<button class="flex flex-col items-center flex-1 text-[#00afaa]">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+</svg>
+<span class="text-[10px] font-semibold mt-1">Home</span>
+</button>
+<!-- 2. Bills -->
+<button class="flex flex-col items-center flex-1 text-slate-400 hover:text-slate-600">
+<svg class="w-5 h-5 stroke-current fill-none stroke-[2]" viewBox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[10px] font-medium mt-1">Bills</span>
+</button>
+<!-- 3. GreenUP -->
+<button class="flex flex-col items-center flex-1 text-slate-400 hover:text-slate-600">
+<div class="w-5 h-5 border-2 border-current rounded flex items-center justify-center font-bold text-[8.5px] leading-none">
+<span class="transform -translate-y-[0.5px]">⇧</span>
+</div>
+<span class="text-[10px] font-medium mt-1">GreenUP</span>
+</button>
+<!-- 4. EV Charging -->
+<button class="flex flex-col items-center flex-1 text-slate-400 hover:text-slate-600">
+<svg class="w-5 h-5 stroke-current fill-none stroke-[2]" viewBox="0 0 24 24">
+<rect height="8" rx="2" stroke-linecap="round" stroke-linejoin="round" width="18" x="3" y="10"></rect>
+<path d="M5 10l1.5-4.5h11L19 10" stroke-linecap="round" stroke-linejoin="round"></path>
+<circle cx="7.5" cy="14" fill="currentColor" r="1.5"></circle>
+<circle cx="16.5" cy="14" fill="currentColor" r="1.5"></circle>
+</svg>
+<span class="text-[10px] font-medium mt-1">EV Charging</span>
+</button>
+<!-- 5. Profile -->
+<button class="flex flex-col items-center flex-1 text-slate-400 hover:text-slate-600">
+<svg class="w-5 h-5 stroke-current fill-none stroke-[2]" viewBox="0 0 24 24">
+<path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke-linecap="round" stroke-linejoin="round"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+<span class="text-[10px] font-medium mt-1">Profile</span>
+</button>
+</div>
+</nav>
+<!-- END: BottomNavigation -->
+</div>
+
+
+
+
+
+
+</body></html>
